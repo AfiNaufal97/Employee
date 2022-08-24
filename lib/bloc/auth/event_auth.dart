@@ -20,6 +20,7 @@ class EventRegister extends EventAuth {
   List<Object?> get props => [email, password];
 }
 
+// ignore: must_be_immutable
 class EventLogin extends EventAuth {
   String email;
   String password;
@@ -29,4 +30,18 @@ class EventLogin extends EventAuth {
   @override
   // TODO: implement props
   List<Object?> get props => [email, password];
+}
+
+class EventGetToken extends EventAuth {
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class EventLogout extends EventAuth {
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
 }

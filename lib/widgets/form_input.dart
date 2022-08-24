@@ -5,9 +5,15 @@ import 'package:flutter/material.dart';
 class FormInput extends StatelessWidget {
   String title;
   String hint;
+  bool? hidden;
   TextEditingController controller;
 
-  FormInput({Key? key, required this.controller, required this.title, required this.hint})
+  FormInput(
+      {Key? key,
+      this.hidden,
+      required this.controller,
+      required this.title,
+      required this.hint})
       : super(key: key);
 
   @override
@@ -23,6 +29,7 @@ class FormInput extends StatelessWidget {
           height: 5,
         ),
         TextFormField(
+          obscureText: hidden ?? false,
           controller: controller,
           decoration: InputDecoration(
               hintText: hint,

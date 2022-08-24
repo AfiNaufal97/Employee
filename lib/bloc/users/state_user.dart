@@ -1,3 +1,4 @@
+import 'package:contact/model/users/employee.dart';
 import 'package:contact/model/users/single_user.dart';
 import 'package:equatable/equatable.dart';
 
@@ -9,7 +10,7 @@ class StateInit extends StateUser {
   List<Object?> get props => throw UnimplementedError();
 }
 
-class StateLoading extends StateUser {
+class StateLoadingUser extends StateUser {
   @override
   // TODO: implement props
   List<Object?> get props => throw UnimplementedError();
@@ -26,11 +27,11 @@ class StateError extends StateUser {
 }
 
 class StateSingleUser extends StateUser {
-  SingleUser singleUser;
+  Employee employee;
 
-  StateSingleUser({required this.singleUser});
+  StateSingleUser({required this.employee});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [singleUser];
+  List<Object?> get props => [employee];
 }

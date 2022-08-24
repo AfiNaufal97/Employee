@@ -16,6 +16,27 @@ class BlocCrud extends Bloc<EventCrud, StateCrud> {
           emit(StateError(error: e.toString()));
         }
       }
+
+      if (event is EventUpdate) {
+        try {
+          emit(StateLoading());
+          var res = await CrudService()
+              .updateEmployee(event.id, event.job, event.name);
+          emit(StateUpdateSuccess(updateEmployee: res));
+        } catch (e) {
+          emit(StateError(error: e.toString()));
+        }
+      }
+
+      if (event is EventDelete) {
+        try {
+          emit(StateLoading());
+          await CrudService().deleteEmployee(event.id);
+          emit(StateDeleteSuccess());
+        } catch (e) {
+          emit(StateError(error: e.toString()));
+        }
+      }
     });
   }
 }

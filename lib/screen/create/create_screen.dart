@@ -3,19 +3,27 @@ import 'package:contact/bloc/crud/event_crud.dart';
 import 'package:contact/bloc/crud/state_crud.dart';
 import 'package:contact/widgets/form_input.dart';
 import 'package:contact/widgets/rounded_button.dart';
+import 'package:contact/widgets/top_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-import '../../navigation/routes.dart';
+class CreateScreen extends StatefulWidget {
+  int? id;
+  String? nameUser;
+  String? jobUser;
+  String action;
 
-class CrudScreen extends StatefulWidget {
-  const CrudScreen({Key? key}) : super(key: key);
+  CreateScreen(
+      {Key? key, this.nameUser, this.jobUser, required this.action, this.id})
+      : super(key: key);
 
   @override
-  State<CrudScreen> createState() => _CrudScreenState();
+  State<CreateScreen> createState() => _CreateScreenState();
 }
 
-class _CrudScreenState extends State<CrudScreen> {
+class _CreateScreenState extends State<CreateScreen> {
   TextEditingController name = TextEditingController(text: '');
   TextEditingController job = TextEditingController(text: '');
 
@@ -25,14 +33,6 @@ class _CrudScreenState extends State<CrudScreen> {
     } else {
       return true;
     }
-  }
-
-  void notifResult()async{
-    Future.delayed(const Duration(seconds: 1), () {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Succes Add')));
-    },);
   }
 
   @override
@@ -54,7 +54,8 @@ class _CrudScreenState extends State<CrudScreen> {
                     image: AssetImage('assets/icons/ic_user.png'))),
           ),
           FormInput(
-            controller: name,
+            controller: name..text = widget.nameUser ?? '',
+
             title: 'Name',
             hint: 'full name',
           ),
@@ -62,7 +63,7 @@ class _CrudScreenState extends State<CrudScreen> {
             height: 20,
           ),
           FormInput(
-            controller: job,
+            controller:job..text = widget.jobUser ?? '',
             title: 'Job',
             hint: 'example : ceo',
           ),
@@ -71,13 +72,16 @@ class _CrudScreenState extends State<CrudScreen> {
           ),
           BlocConsumer<BlocCrud, StateCrud>(
             listener: (context, state) {
-              if(state is StateError){
-                ScaffoldMessenger.of(context).showSnackBar(
-                     SnackBar(
-                        content: Text(state.error)));
+              if (state is StateError) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.error)));
               }
-              if(state is StateCreateSuccess){
-                Navigator.pushNamedAndRemoveUntil(context, Routes.home, (route) => false);
+              if (state is StateCreateSuccess) {
+                success('Success Add Employee', context);
+              }
+
+              if (state is StateUpdateSuccess) {
+                success('Success Update Employee', context);
               }
             },
             builder: (context, state) {
@@ -88,15 +92,24 @@ class _CrudScreenState extends State<CrudScreen> {
               }
               return RoundedButton(
                   func: () {
-                    cekForm()
-                        ? context
+                    if (cekForm()) {
+                      if (widget.action == 'add') {
+                        context
                             .read<BlocCrud>()
-                            .add(EventCreate(name: name.text, job: job.text))
-                        : ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Tidak Boleh Kososng')));
+                            .add(EventCreate(name: name.text, job: job.text));
+                      } else if (widget.action == 'update') {
+                        context.read<BlocCrud>().add(EventUpdate(
+                            name: name.text, job: job.text, id: widget.id!));
+                      } else {}
+                    } else {
+                      showTopSnackBar(
+                          context,
+                          const CustomSnackBar.error(
+                            message: "form cannot  empty",
+                          ));
+                    }
                   },
-                  titleButton: 'Save');
+                  titleButton: widget.action);
             },
           )
         ],

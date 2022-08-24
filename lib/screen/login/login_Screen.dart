@@ -1,7 +1,9 @@
 import 'package:contact/bloc/auth/event_auth.dart';
+import 'package:contact/widgets/top_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import '../../bloc/auth/bloc_auth.dart';
 import '../../bloc/auth/state_auth.dart';
 import '../../navigation/routes.dart';
@@ -30,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,40 +57,44 @@ class _LoginScreenState extends State<LoginScreen> {
             FormInput(
               controller: password,
               title: 'password',
+              hidden: true,
               hint: '******',
             ),
             const SizedBox(
               height: 50,
             ),
-            BlocConsumer<BlocAuth, StateAuth>(
-              builder: (context, state) {
-                if (state is AuthStateLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return RoundedButton(
-                    func: () {
-                      cekForm()
-                          ? context.read<BlocAuth>().add(EventLogin(
-                          password: password.text, email: email.text))
-                          : ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Fomr Tidak Boleh Kosong')));
-                    },
-                    titleButton: 'Login');
-              },
-              listener: (context, state) {
-                if (state is AuthStateError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.error.toString())));
-                }
-                if (state is AuthLoginSuccess) {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.home, (route) => false);
-                }
-              },
-            ),
+            BlocConsumer<BlocAuth, StateAuth>(builder: (context, state) {
+              if (state is AuthStateLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return RoundedButton(
+                  func: () {
+                    cekForm()
+                        ? context.read<BlocAuth>().add(EventLogin(
+                            password: password.text, email: email.text))
+                        : showTopSnackBar(
+                            context,
+                            const CustomSnackBar.error(
+                              message: "form cannot  empty",
+                            ),
+                          );
+                  },
+                  titleButton: 'Login');
+            }, listener: (context, state) {
+              if (state is AuthStateError) {
+                showTopSnackBar(
+                  context,
+                  CustomSnackBar.error(
+                    message: state.error,
+                  ),
+                );
+              }
+              if (state is AuthLoginSuccess) {
+                success('Login Success', context);
+              }
+            }),
             const SizedBox(
               height: 10,
             ),

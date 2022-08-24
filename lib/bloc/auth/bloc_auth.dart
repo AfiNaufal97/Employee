@@ -12,7 +12,6 @@ class BlocAuth extends Bloc<EventAuth, StateAuth> {
         try {
           emit(AuthStateLoading());
           var employees = await UsersService().getListUser();
-          print(employees[2].first_name);
           emit(AuthGetAllSuccess(employees: employees));
         } catch (e) {
           emit(AuthStateError(error: e.toString()));
@@ -40,6 +39,34 @@ class BlocAuth extends Bloc<EventAuth, StateAuth> {
           emit(AuthStateError(error: e.toString()));
         }
       }
+
+
+      if(event is EventGetToken){
+        try{
+          emit(AuthStateLoading());
+          String? getToken = await AuthService().getToken();
+          if(getToken != null){
+            emit(AuthGetToken(token: getToken));
+          }
+          emit(AuthStateInit());
+        }catch(e){
+          emit(AuthStateError(error: e.toString()));
+        }
+      }
+
+      if(event is EventLogout){
+        try{
+          emit(AuthStateLoading());
+          await AuthService().deleteAllScureStorage();
+          emit(AuthStateInit());
+        }catch(e){
+          emit(AuthStateError(error: e.toString()));
+        }
+      }
+
+
     });
+
+
   }
 }

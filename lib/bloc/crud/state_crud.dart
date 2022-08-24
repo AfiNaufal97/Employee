@@ -1,4 +1,5 @@
 import 'package:contact/model/crud/create_employee.dart';
+import 'package:contact/model/crud/update_employee.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class StateCrud extends Equatable {}
@@ -15,6 +16,7 @@ class StateLoading extends StateCrud {
   List<Object?> get props => throw UnimplementedError();
 }
 
+// ignore: must_be_immutable
 class StateError extends StateCrud {
   String error;
 
@@ -35,3 +37,23 @@ class StateCreateSuccess extends StateCrud {
   // TODO: implement props
   List<Object?> get props => [newEmployee];
 }
+
+// ignore: must_be_immutable
+class StateUpdateSuccess extends StateCrud {
+  UpdateEmployee updateEmployee;
+
+  StateUpdateSuccess({required this.updateEmployee});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [updateEmployee];
+}
+
+class StateDeleteSuccess extends StateCrud {
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+

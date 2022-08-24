@@ -57,14 +57,14 @@ class ListUser extends StatelessWidget {
                 Text(
                   email,
                   style:
-                      MyFonts.medium.copyWith(fontSize: 15, color: MyColors.grey),
+                      MyFonts.semiBold.copyWith(fontSize: 15, color: MyColors.grey),
                 )
               ],
             ),
             const Spacer(),
             const Icon(
-              Icons.favorite,
-              color: MyColors.yellow,
+              Icons.navigate_next,
+              color: MyColors.black,
               size: 30,
             )
           ],

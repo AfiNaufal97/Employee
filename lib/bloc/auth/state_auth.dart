@@ -17,6 +17,7 @@ class AuthStateLoading extends StateAuth {
   List<Object?> get props => throw UnimplementedError();
 }
 
+// ignore: must_be_immutable
 class AuthStateError extends StateAuth {
   String error;
 
@@ -27,6 +28,7 @@ class AuthStateError extends StateAuth {
   List<Object?> get props => [error];
 }
 
+// ignore: must_be_immutable
 class AuthGetAllSuccess extends StateAuth {
   List<Employee> employees;
 
@@ -37,6 +39,7 @@ class AuthGetAllSuccess extends StateAuth {
   List<Object?> get props => [employees];
 }
 
+// ignore: must_be_immutable
 class AuthRegisterSuccess extends StateAuth {
   RegisterResponse authResponse;
 
@@ -47,6 +50,7 @@ class AuthRegisterSuccess extends StateAuth {
   List<Object?> get props => [authResponse];
 }
 
+// ignore: must_be_immutable
 class AuthLoginSuccess extends StateAuth {
   LoginResponse authResponse;
 
@@ -55,4 +59,15 @@ class AuthLoginSuccess extends StateAuth {
   @override
   // TODO: implement props
   List<Object?> get props => [authResponse];
+}
+
+// ignore: must_be_immutable
+class AuthGetToken extends StateAuth {
+  String? token;
+
+  AuthGetToken({required this.token});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [token];
 }
